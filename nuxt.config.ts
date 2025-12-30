@@ -68,6 +68,7 @@ export default defineNuxtConfig({
       gtm_enabled: true,
       gtm_debug: process.env.NODE_ENV === 'development' ? true : false,
       baseUrl: process.env.NUXT_PUBLIC_BASE_URL || '',
+      sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN || '',
       motion: {
         directives: {
           'faq-pop': {
@@ -116,6 +117,7 @@ export default defineNuxtConfig({
     '@nuxtjs/robots',
     '@nuxtjs/sitemap',
     'nuxt-rate-limit',
+    'nuxt-csurf',
   ],
 
   // Rate limiting configuration
