@@ -222,5 +222,10 @@
   "use_case_lead_management_section4_title": "Conclusion",
   "use_case_lead_management_section4_text": "AI-powered automation transforms traditional, slow, and error-prone lead management into an efficient, intelligent system that fuels business growth.",
   "use_case_lead_management_section4_text2": "By automating the entire lead sourcing and outreach process, your real estate agency can significantly increase the pipeline of high-quality leads, maximize productivity, and secure a competitive advantage in today's fast-paced real estate landscape.",
-
+  "contact_form_sending": "Sending your message, thank you for your trust",
+  "contact_form_success": "Your message has been sent successfully, thank you for your trust",
+  "contact_form_error_message": "Unable to send your message. Please try again or contact us directly.",
+  "contact_form_network_error": "Network error. Please check your connection and try again.",
+  "dismiss": "Dismiss",
+  "home_page_link": "Home"
 }

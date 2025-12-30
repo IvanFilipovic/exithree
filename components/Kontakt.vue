@@ -2,30 +2,36 @@
   <section class="container">
     <div class="content flex flex-col">
       <div v-if="loading" class="my-auto">
-        <p class="mx-auto py-16 text-center text-[2rem] tracking-wide">Šaljemo mail, hvala Vam na povjerenju</p>
-        <div class="loading mx-auto flex items-center justify-center">
+        <p class="mx-auto py-16 text-center text-[2rem] tracking-wide" role="status" aria-live="polite">
+          {{ $t('contact_form_sending') }}
+        </p>
+        <div class="loading mx-auto flex items-center justify-center" aria-hidden="true">
           <span></span>
           <span></span>
           <span></span>
         </div>
       </div>
       <div v-else-if="success" class="my-auto">
-        <p class="mx-auto py-6 text-center text-[2rem] tracking-wide">Mail je poslan, hvala Vam na povjerenju</p>
+        <p class="mx-auto py-6 text-center text-[2rem] tracking-wide" role="status" aria-live="polite">
+          {{ $t('contact_form_success') }}
+        </p>
         <div class="mx-auto pb-10 flex items-center justify-center">
-          <MdiIcon icon="mdiCheckCircleOutline" class="text-primary h-14 w-14" />
+          <MdiIcon icon="mdiCheckCircleOutline" class="text-primary h-14 w-14" aria-hidden="true" />
         </div>
-        <NuxtLink to="/" class="button-primary flex flex-row w-fit justify-start items-center mt-4 mx-auto">
+        <NuxtLink to="/" class="button-primary flex flex-row w-fit justify-start items-center mt-4 mx-auto"
+          :aria-label="$t('home_page_link')">
           <p class="group relative w-max flex flex-row items-start">
             <!-- Arrow: initially hidden and shifted left -->
-            <Icon class="arrow transition-all duration-300 ml-2 w-8 h-8" name="meteor-icons:arrow-right-long" />
+            <Icon class="arrow transition-all duration-300 ml-2 w-8 h-8" name="meteor-icons:arrow-right-long"
+              aria-hidden="true" />
             <!-- Button text -->
             <span
               class="button-text px-auto py-auto text-[1rem] font-medium uppercase transition-transform duration-300 my-auto">
-              Početna
+              {{ $t('home_page_link') }}
             </span>
             <!-- Icon: will fade out on hover -->
             <Icon class="icon mx-auto my-auto ml-2 pl-2 transition-opacity duration-300 w-8 h-8"
-              name="entypo:dot-single" />
+              name="entypo:dot-single" aria-hidden="true" />
           </p>
         </NuxtLink>
       </div>
@@ -48,34 +54,62 @@
             </button>
           </div>
         </div>
-        <form @submit.prevent="submitForm" class="mt-8 space-y-6 py-4">
+        <!-- Error Message Display -->
+        <div v-if="errorMessage" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4"
+          role="alert" aria-live="assertive">
+          <div class="flex justify-between items-start">
+            <p>{{ errorMessage }}</p>
+            <button @click="errorMessage = null" class="text-sm underline hover:no-underline ml-4"
+              :aria-label="$t('dismiss')">
+              {{ $t('dismiss') }}
+            </button>
+          </div>
+        </div>
+
+        <form @submit.prevent="submitForm" class="mt-8 space-y-6 py-4" novalidate>
           <div class="flex flex-col md:flex-row md:items-end md:space-x-2">
-            <span class="text-project_black text-[1rem] font-medium">{{ $t('contact_page_greeting') }}</span>
-            <input type="text" v-model="formData.name" :placeholder="$t('contact_page_placeholder_name')"
-              class="flex-grow p-2 border-b border-project_black focus:outline-none focus:border-primary bg-inherit" />
-            <span class="hidden md:flex">,</span>
+            <label for="name" class="text-project_black text-[1rem] font-medium">
+              {{ $t('contact_page_greeting') }}
+            </label>
+            <input id="name" type="text" v-model="formData.name" :placeholder="$t('contact_page_placeholder_name')"
+              class="flex-grow p-2 border-b border-project_black focus:outline-none focus:border-primary bg-inherit"
+              :aria-required="true" :aria-invalid="formAttempted && !formData.name.trim()" />
+            <span class="hidden md:flex" aria-hidden="true">,</span>
           </div>
 
           <div class="flex flex-col md:flex-row md:items-end md:space-x-2 space-y-2">
-            <span class="text-project_black text-[1rem] font-medium">{{ $t('contact_page_job_title') }}</span>
-            <input type="text" v-model="formData.jobTitle" :placeholder="$t('contact_page_placeholder_job')"
-              class="flex-grow p-2 border-b border-project_black focus:outline-none focus:border-primary bg-inherit" />
-            <span class="pt-2 md:pt-0">{{ $t('contact_page_company_connector') }}</span>
-            <input type="text" v-model="formData.company" :placeholder="$t('contact_page_placeholder_company')"
-              class="flex-grow p-2 border-b border-project_black focus:outline-none focus:border-primary bg-inherit" />
-            <span class="hidden md:flex">.</span>
+            <label for="jobTitle" class="text-project_black text-[1rem] font-medium">
+              {{ $t('contact_page_job_title') }}
+            </label>
+            <input id="jobTitle" type="text" v-model="formData.jobTitle"
+              :placeholder="$t('contact_page_placeholder_job')"
+              class="flex-grow p-2 border-b border-project_black focus:outline-none focus:border-primary bg-inherit"
+              :aria-required="true" :aria-invalid="formAttempted && !formData.jobTitle.trim()" />
+            <span class="pt-2 md:pt-0" aria-hidden="true">{{ $t('contact_page_company_connector') }}</span>
+            <label for="company" class="sr-only">{{ $t('contact_page_placeholder_company') }}</label>
+            <input id="company" type="text" v-model="formData.company"
+              :placeholder="$t('contact_page_placeholder_company')"
+              class="flex-grow p-2 border-b border-project_black focus:outline-none focus:border-primary bg-inherit"
+              :aria-required="true" :aria-invalid="formAttempted && !formData.company.trim()" />
+            <span class="hidden md:flex" aria-hidden="true">.</span>
           </div>
 
           <!-- Email -->
           <div class="flex flex-col md:flex-row md:items-end md:space-x-2 space-y-2 relative">
-            <span class="text-project_black text-[1rem] font-medium">{{ $t('contact_page_email_intro') }}</span>
-            <input type="email" v-model="formData.email" :placeholder="$t('contact_page_placeholder_email')"
+            <label for="email" class="text-project_black text-[1rem] font-medium">
+              {{ $t('contact_page_email_intro') }}
+            </label>
+            <input id="email" type="email" v-model="formData.email"
+              :placeholder="$t('contact_page_placeholder_email')"
               class="flex-grow p-2 border-b focus:outline-none bg-inherit" :class="{
                 'border-project_black focus:border-primary': isEmailValid || !formData.email,
                 'border-red-500/90 focus:border-red-500/90': !isEmailValid && formData.email
-              }" />
-            <span v-if="!isEmailValid" class="text-red-500/90 text-[1rem] font-medium absolute right-0">{{ $t('contact_page_invalid_email') }}</span>
-
+              }" :aria-required="true" :aria-invalid="!isEmailValid && formData.email !== ''"
+              :aria-describedby="!isEmailValid && formData.email ? 'email-error' : undefined" />
+            <span v-if="!isEmailValid && formData.email" id="email-error"
+              class="text-red-500/90 text-[1rem] font-medium absolute right-0" role="alert">
+              {{ $t('contact_page_invalid_email') }}
+            </span>
           </div>
           <div class="flex py-8">
             <button class="group flex flex-row w-fit uppercase mx-auto mt-4 py-3 px-6 my-auto rounded-[6.25rem]" aria-label="Submit contact form"
@@ -94,59 +128,84 @@
   </section>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+
+// TypeScript interfaces
+interface FormData {
+  name: string
+  jobTitle: string
+  company: string
+  email: string
+}
+
+interface Category {
+  label: string
+  value: string
+}
+
+// Composables
 const { t } = useI18n()
-const loading = ref(false)
-const success = ref(false)
-const topics = [
-  'Web Development',
-  'Mobile Development',
-  'Automated Testing',
-  'Social Media Automation',
-  'E-commerce Automation',
-  'Sales Automation'
-]
-const categories = [
-  { label: 'Web Development',           value: 'web_dev' },
-  { label: 'Mobile Development',        value: 'mobile_dev' },
-  { label: 'Automated Testing',         value: 'automated_testing' },
-  { label: 'Social Media Automation',   value: 'social_media_auto' },
-  { label: 'E-commerce Automation',     value: 'ecommerce_auto' },
-  { label: 'Sales Automation',          value: 'sales_auto' },
+
+// Reactive state
+const loading = ref<boolean>(false)
+const success = ref<boolean>(false)
+const errorMessage = ref<string | null>(null)
+const formAttempted = ref<boolean>(false)
+
+// Topic categories
+const categories: Category[] = [
+  { label: 'Web Development', value: 'web_dev' },
+  { label: 'Mobile Development', value: 'mobile_dev' },
+  { label: 'Automated Testing', value: 'automated_testing' },
+  { label: 'Social Media Automation', value: 'social_media_auto' },
+  { label: 'E-commerce Automation', value: 'ecommerce_auto' },
+  { label: 'Sales Automation', value: 'sales_auto' },
 ]
 
-const selectedTopic = ref(null);
-const formData = ref({
-  name: "",
-  jobTitle: "",
-  company: "",
-  email: "",
+const selectedTopic = ref<string | null>(null)
+const formData = ref<FormData>({
+  name: '',
+  jobTitle: '',
+  company: '',
+  email: '',
 })
-const isEmailValid = computed(() => {
+
+// Email validation
+const isEmailValid = computed<boolean>(() => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return emailRegex.test(formData.value.email) || formData.value.email === ""
+  return emailRegex.test(formData.value.email) || formData.value.email === ''
 })
-const selectTopic = (topic) => {
-  selectedTopic.value = topic.value;
+
+// Topic selection
+const selectTopic = (topic: Category): void => {
+  selectedTopic.value = topic.value
 }
-// Computed property for validation
-const isFormValid = computed(() => {
+
+// Form validation
+const isFormValid = computed<boolean>(() => {
   return (
-    formData.value.name.trim() !== "" &&
-    formData.value.jobTitle.trim() !== "" &&
-    formData.value.company.trim() !== "" &&
-    formData.value.email.trim() !== "" &&
+    formData.value.name.trim() !== '' &&
+    formData.value.jobTitle.trim() !== '' &&
+    formData.value.company.trim() !== '' &&
+    formData.value.email.trim() !== '' &&
     selectedTopic.value !== null
   )
 })
 
-const submitForm = async () => {
+// Form submission
+const submitForm = async (): Promise<void> => {
+  formAttempted.value = true
+  errorMessage.value = null
+
+  if (!isFormValid.value) {
+    return
+  }
+
   loading.value = true
-  if (!isFormValid.value) return
 
   try {
-    const response = await $fetch('/api/submit-lead', {
+    await $fetch('/api/submit-lead', {
       method: 'POST',
       body: {
         full_name: formData.value.name,
@@ -161,16 +220,33 @@ const submitForm = async () => {
     success.value = true
   } catch (error: any) {
     loading.value = false
-    console.error("Form submission error:", error)
+    console.error('Form submission error:', error)
 
-    // Better error handling - could be enhanced with proper UI messages
-    const errorMessage = error?.data?.statusMessage || 'An error occurred. Please try again.'
-    alert(errorMessage)
+    // Display user-friendly error message
+    if (error?.statusCode === 500 || error?.data?.statusCode === 500) {
+      errorMessage.value = t('contact_form_error_message')
+    } else if (error?.name === 'FetchError' || !navigator.onLine) {
+      errorMessage.value = t('contact_form_network_error')
+    } else {
+      errorMessage.value = error?.data?.statusMessage || t('contact_form_error_message')
+    }
   }
 }
-
 </script>
 <style scoped>
+/* Screen reader only - visually hidden but accessible to screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 .loading span {
   width: 15px;
   height: 15px;

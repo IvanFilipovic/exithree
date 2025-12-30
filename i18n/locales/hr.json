@@ -222,5 +222,10 @@
   "use_case_lead_management_section4_title": "Zaključak",
   "use_case_lead_management_section4_text": "Automatizacija vođena umjetnom inteligencijom transformira tradicionalno, sporo i pogreškama sklono upravljanje potencijalnim klijentima u učinkovit, inteligentan sustav koji potiče rast poslovanja.",
   "use_case_lead_management_section4_text2": "Automatizacijom cjelokupnog procesa prikupljanja i komunikacije s potencijalnim klijentima, vaša agencija za nekretnine može značajno povećati broj kvalitetnih kontakata, maksimalno povećati produktivnost i osigurati konkurentsku prednost na današnjem brzom tržištu nekretnina.",
-  
+  "contact_form_sending": "Šaljemo poruku, hvala Vam na povjerenju",
+  "contact_form_success": "Poruka je uspješno poslana, hvala Vam na povjerenju",
+  "contact_form_error_message": "Nažalost, nije moguće poslati poruku. Molimo pokušajte ponovno ili nas kontaktirajte direktno.",
+  "contact_form_network_error": "Greška u mreži. Molimo provjerite svoju internetsku vezu i pokušajte ponovno.",
+  "dismiss": "Zatvori",
+  "home_page_link": "Početna"
 }

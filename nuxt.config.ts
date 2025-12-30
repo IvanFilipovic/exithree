@@ -34,6 +34,10 @@ export default defineNuxtConfig({
         { property: 'og:site_name', content: 'Exit Three' },
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:site', content: '@exitthree' },
+        // Prevent staging/preview sites from being indexed
+        ...(process.env.ENVIRONMENT === 'staging' || process.env.ENVIRONMENT === 'preview'
+          ? [{ name: 'robots', content: 'noindex, nofollow' }]
+          : [])
       ],
       link: [
         { rel: 'preconnect', href: 'https://www.google-analytics.com', crossorigin: '' },
