@@ -115,7 +115,22 @@ export default defineNuxtConfig({
     'nuxt-vitalizer',
     '@nuxtjs/robots',
     '@nuxtjs/sitemap',
+    'nuxt-rate-limit',
   ],
+
+  // Rate limiting configuration
+  rateLimit: {
+    routes: {
+      '/api/send-email': {
+        maxRequests: 3,
+        windowMs: 60000 // 3 requests per minute
+      },
+      '/api/submit-lead': {
+        maxRequests: 5,
+        windowMs: 300000 // 5 requests per 5 minutes
+      }
+    }
+  },
   i18n: {
     bundle: { optimizeTranslationDirective: false },
     locales: [
