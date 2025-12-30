@@ -7,7 +7,20 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'static',
     compressPublicAssets: true,
-    prerender: { routes: ['/'] }
+    prerender: { routes: ['/'] },
+    routeRules: {
+      '/**': {
+        headers: {
+          'X-Frame-Options': 'DENY',
+          'X-Content-Type-Options': 'nosniff',
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+          'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+          'X-XSS-Protection': '1; mode=block',
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';"
+        }
+      }
+    }
   },
 
   app: {
@@ -46,12 +59,15 @@ export default defineNuxtConfig({
 
   // Runtime config + env
   runtimeConfig: {
+    // Private keys (server-side only) - not exposed to browser
+    basicApiKey: process.env.BASIC_API_KEY || '',
+
+    // Public keys (exposed to browser)
     public: {
       gtm_id: process.env.NUXT_PUBLIC_GTAG_ID,
       gtm_enabled: true,
       gtm_debug: process.env.NODE_ENV === 'development' ? true : false,
       baseUrl: process.env.NUXT_PUBLIC_BASE_URL || '',
-      basicApiKey: process.env.NUXT_PUBLIC_BASIC_API_KEY || '',
       motion: {
         directives: {
           'faq-pop': {
