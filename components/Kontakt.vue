@@ -145,36 +145,27 @@ const submitForm = async () => {
   loading.value = true
   if (!isFormValid.value) return
 
-  const config = useRuntimeConfig()
-
   try {
-    const response = await fetch(`${config.public.baseUrl}/backend/api/leads/`, {
+    const response = await $fetch('/api/submit-lead', {
       method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        Authorization: `Basic ${config.public.basicApiKey}`
-      },
-      body: JSON.stringify({
+      body: {
         full_name: formData.value.name,
         position: formData.value.jobTitle,
         company_name: formData.value.company,
         email: formData.value.email,
         category: selectedTopic.value,
-      }),
+      },
     })
 
-    const result = await response.json()
-
-    if (response.status === 201) {
-      loading.value = false
-      success.value = true
-    } else {
-      console.error("API error:", result)
-      alert("Failed to send message. Please try again.")
-    }
-  } catch (error) {
+    loading.value = false
+    success.value = true
+  } catch (error: any) {
+    loading.value = false
     console.error("Form submission error:", error)
-    alert("An error occurred. Please try again.")
+
+    // Better error handling - could be enhanced with proper UI messages
+    const errorMessage = error?.data?.statusMessage || 'An error occurred. Please try again.'
+    alert(errorMessage)
   }
 }
 
