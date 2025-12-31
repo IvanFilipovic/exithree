@@ -3,23 +3,16 @@ node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
 
-# Nuxt build outputs
+# Build output
 .output
 .nuxt
-.nitro
 dist
-.cache
-.data
 
-# Environment variables
+# Environment files
 .env
-.env.*
-!.env.example
+.env.local
+.env.*.local
 
 # Git
 .git
@@ -31,13 +24,24 @@ dist
 *.swp
 *.swo
 *.swn
+
+# OS
 .DS_Store
+Thumbs.db
 
-# Logs
-logs
-*.log
-
-# Misc
+# Documentation
 README.md
-claude.md
+*.md
+!package.json
+
+# CI/CD
 .github
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Testing
+coverage
+.nyc_output

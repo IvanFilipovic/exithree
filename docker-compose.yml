@@ -5,7 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: exit-three
     ports:
       - "3000:3000"
     env_file:
@@ -22,8 +21,11 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - exit-three-network
+      - exit3-network
+    labels:
+      - "com.exit3.description=Exit Three Marketing Website"
+      - "com.exit3.version=1.0.0"
 
 networks:
-  exit-three-network:
+  exit3-network:
     driver: bridge

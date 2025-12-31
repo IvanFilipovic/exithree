@@ -34,6 +34,10 @@ export default defineNuxtConfig({
         { property: 'og:site_name', content: 'Exit Three' },
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:site', content: '@exitthree' },
+        // Prevent staging/preview sites from being indexed
+        ...(process.env.ENVIRONMENT === 'staging' || process.env.ENVIRONMENT === 'preview'
+          ? [{ name: 'robots', content: 'noindex, nofollow' }]
+          : [])
       ],
       link: [
         { rel: 'preconnect', href: 'https://www.google-analytics.com', crossorigin: '' },
@@ -68,6 +72,7 @@ export default defineNuxtConfig({
       gtm_enabled: true,
       gtm_debug: process.env.NODE_ENV === 'development' ? true : false,
       baseUrl: process.env.NUXT_PUBLIC_BASE_URL || '',
+      sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN || '',
       motion: {
         directives: {
           'faq-pop': {
@@ -115,7 +120,23 @@ export default defineNuxtConfig({
     'nuxt-vitalizer',
     '@nuxtjs/robots',
     '@nuxtjs/sitemap',
+    'nuxt-rate-limit',
+    'nuxt-csurf',
   ],
+
+  // Rate limiting configuration
+  rateLimit: {
+    routes: {
+      '/api/send-email': {
+        maxRequests: 3,
+        windowMs: 60000 // 3 requests per minute
+      },
+      '/api/submit-lead': {
+        maxRequests: 5,
+        windowMs: 300000 // 5 requests per 5 minutes
+      }
+    }
+  },
   i18n: {
     bundle: { optimizeTranslationDirective: false },
     locales: [
